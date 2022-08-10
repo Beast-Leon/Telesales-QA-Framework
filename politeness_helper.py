@@ -1,6 +1,6 @@
 import nltk
 import spacy
-nlp = spacy.load('en_core_web_lg')
+#nlp = spacy.load('en_core_web_lg')
 import pickle
 
 from politeness.scripts.format_input import *
@@ -8,8 +8,8 @@ from politeness.scripts.train_model import *
 from politeness.features.vectorizer import PolitenessFeatureVectorizer
 
 # Load standardizer
-with open('other_collection/standardizer.pkl', 'rb') as f:
-    standardizer = pickle.load(f)
+# with open('other_collection/standardizer.pkl', 'rb') as f:
+#     standardizer = pickle.load(f)
 
 # Get parses using spacy, then we need the parse to pass in the politeness model.
 def get_parses(spacy_doc):
@@ -38,11 +38,11 @@ def get_parses(spacy_doc):
     return parse
 
 # If format_doc for training, need to pass score.
-def format_doc(doc, score = None):
+def format_doc(doc, spacy_model, score = None):
     sents = get_sentences(doc)
     raw_parses = []
     for sent in sents:
-        nlp_sent = nlp(sent)
+        nlp_sent = spacy_model(sent)
         raw_parses.append(get_parses(nlp_sent))
     if score == None:
         parse_dict = {"text": doc,
@@ -58,7 +58,7 @@ def format_doc(doc, score = None):
         parse_dict['parses'].append(raw['deps'])
     return parse_dict
 
-def customize_score(request, clf, score_format = "int"):
+def customize_score(request, clf, standardizer, score_format = "int", pred_threshold = 0.5):
     """
     :param request - The request document to score
     :type request - dict with 'sentences' and 'parses' field
@@ -90,9 +90,24 @@ def customize_score(request, clf, score_format = "int"):
     X = csr_matrix(np.asarray([fv]).astype("float"))
     X = standardizer.transform(X)
     if score_format == "int":
-        probs = clf.predict(X)
+        probs = clf.predict_proba(X)
+        probs_binary = (probs[:,1] >= pred_threshold).astype('int')
+        return probs_binary[0]
     elif score_format == "prob":
         probs = clf.predict_proba(X)
         # Massage return format
-        probs = {"polite": probs[0][1], "impolite": probs[0][0]}
-    return probs
+        probs_dict = {"polite": probs[0][1], "impolite": probs[0][0]}
+        return probs_dict
+    
+# category_sentence is a list with tuples, each tuple contains (category (like opening, purpose of call), sentence)
+def nlp_politeness(category_sentence, clf, spacy_model, standardizer, score_format = "int", pred_threshold = 0.5):
+    result_politeness = []
+    for category, sentence in category_sentence:
+        cur_parse = format_doc(sentence, spacy_model)
+        cur_score = customize_score(cur_parse, clf, standardizer, score_format, pred_threshold)
+        if cur_score == 1:
+            politeness = "polite"
+        elif cur_score == 0:
+            politeness = "impolite"
+        result_politeness.append((category, sentence, politeness))
+    return result_politeness
