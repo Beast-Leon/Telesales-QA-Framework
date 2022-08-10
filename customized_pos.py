@@ -1,7 +1,7 @@
 import nltk
 import spacy
 
-pos_dict = {'ocbc_plus': {'pos': 'NOUN', 'tag': 'NN'}}
+pos_dict = {'charter_plus': {'pos': 'NOUN', 'tag': 'NN'}}
 
 
 
