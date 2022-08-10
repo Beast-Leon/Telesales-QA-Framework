@@ -105,9 +105,12 @@ def nlp_politeness(category_sentence, clf, spacy_model, standardizer, score_form
     for category, sentence in category_sentence:
         cur_parse = format_doc(sentence, spacy_model)
         cur_score = customize_score(cur_parse, clf, standardizer, score_format, pred_threshold)
-        if cur_score == 1:
-            politeness = "polite"
-        elif cur_score == 0:
-            politeness = "impolite"
-        result_politeness.append((category, sentence, politeness))
+        if score_format == "int":
+            if cur_score == 1:
+                politeness = "polite"
+            elif cur_score == 0:
+                politeness = "impolite"
+            result_politeness.append((category, sentence, politeness))
+        elif score_format == "prob":
+            result_politeness.append((category, sentence, cur_score))
     return result_politeness

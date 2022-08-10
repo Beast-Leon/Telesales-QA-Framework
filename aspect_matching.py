@@ -64,6 +64,7 @@ def nlp_aspect_matching(sentence_ls, spacy_model, lexicon_type = "greeting", boo
             if cur_label != temp_label:
                 new_result_ls.append((temp_label, sen_store))
                 temp_label = cur_label
+                sen_store = ""
             else:
                 sen_store += " " + result_ls[i][1]
                 continue
