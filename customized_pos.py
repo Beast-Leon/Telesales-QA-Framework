@@ -1,7 +1,10 @@
 import nltk
 import spacy
 
-pos_dict = {'charter_plus': {'pos': 'NOUN', 'tag': 'NN'}}
+pos_dict = {'charter_plus': {'pos': 'NOUN', 'tag': 'NN'},
+            'free': {'pos': 'ADJ', 'tag': 'JJ'},
+           'one_or_two': {'pos': 'NUM', 'tag': 'CD'},
+           'single_or_married': {'pos': 'ADJ', 'tag': 'JJ'}}
 
 
 
