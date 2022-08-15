@@ -63,7 +63,7 @@ def cluster_part(parts, cluster_threshold = 5, sen_return_type = "string"):
                 temp_sen = []
             if sen_return_type == "string":
                 sentence = " ".join([i for i in sentence])
-            new_sen.append((label, sentence))       
+            new_sen.append([label, sentence])       
     return new_sen
 
 # Combine the above functions together
