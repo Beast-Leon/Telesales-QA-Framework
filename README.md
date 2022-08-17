@@ -1,4 +1,4 @@
-# politeness_code
+# Telesaes-QA-Framework
 This repo contains retrained politeness model inspired by https://github.com/sudhof/politeness/tree/python3
 
 # Structure of the repo.
