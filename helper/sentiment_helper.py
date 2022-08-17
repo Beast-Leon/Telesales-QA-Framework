@@ -8,9 +8,8 @@ def batch_tokenizer(sentence_ls, tokenizer, sentiment_model):
     softmax_ls = []
     for sentence in sentence_ls:
         cur_input = tokenizer(sentence, return_tensors = "pt")
-        output = sentiment_model(**cur_input).logits.detach().numpy()[0]
-        soft_output = softmax(output, 0)
-        softmax_ls.append(soft_output)
+        output = sentiment_model(cur_input['input_ids'], cur_input['attention_mask']).detach().numpy()[0]
+        softmax_ls.append(output)
     return softmax_ls
 
 # generate label

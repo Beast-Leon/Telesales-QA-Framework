@@ -5,7 +5,7 @@ pos_dict = {'charter_plus': {'pos': 'NOUN', 'tag': 'NN'},
             'free': {'pos': 'ADJ', 'tag': 'JJ'},
            'one_or_two': {'pos': 'NUM', 'tag': 'CD'},
            'single_or_married': {'pos': 'ADJ', 'tag': 'JJ'}}
-
+# pattern_ls = [{"pattern": [{"LOWER": "charter"}, {"LOWER": "plus"}], "attr": {"TAG": "NN", "POS": "NOUN"}}]
 # # spacy --version 2.3.5
 # def pos_postprocessor_pipe(doc) :
 #     for token in doc :

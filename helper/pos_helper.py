@@ -42,7 +42,7 @@ def run_traverse(t):
 # parts is the return of run_traverse
 # input example(sentences, labels)
 # sen_return_type can be either "list" or "string"
-def cluster_part(parts, cluster_threshold = 5, sen_return_type = "string"):
+def cluster_part(parts, cluster_threshold = 7, sen_return_type = "string"):
     sen_return_type = sen_return_type.lower()
     if sen_return_type != "string" and sen_return_type != "list":
         raise Exception(f"Current return type {sen_return_type} is not supported.")
