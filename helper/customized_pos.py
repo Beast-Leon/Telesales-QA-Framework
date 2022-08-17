@@ -26,3 +26,17 @@ def pos_postprocessor_pipe(doc) :
             token.pos_ = pos_dict[text]['pos']
             token.tag_ = pos_dict[text]['tag']
     return doc
+
+pos_ls = [{"pattern": [[{"LOWER": "charter"}, {"LOWER": "plus"}]], "attr": {"TAG": "NN", "POS": "NOUN"}},
+          {"pattern": [[{"LOWER": "free"}]], "attr": {"TAG": "JJ", "POS": "ADJ"}},
+          {"pattern": [[{"LOWER": "one"}, {"LOWER": "or"}, {"LOWER": "two"}]], "attr": {"TAG": "CD", "POS": "NUM"}},
+          {"pattern": [[{"LOWER": "single"}, {"LOWER": "or"}, {"LOWER": "married"}]], "attr": {"TAG": "JJ", "POS": "ADJ"}}
+         ]
+
+def add_pos(cust_rules, model):
+    ruler = model.get_pipe('attribute_ruler')
+    for pos in pos_ls:
+        index_len = len(pos['pattern'][0])
+        for i in range(index_len):
+            ruler.add(patterns = pos['pattern'], attrs = pos['attr'], index = i)
+    

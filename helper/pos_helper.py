@@ -1,6 +1,8 @@
 import nltk
 import spacy
-from customized_pos import *
+import sys
+sys.path.insert(0, '/Users/leon/Income/python files/politeness_code')
+from helper.customized_pos import *
 #nlp = spacy.load('en_core_web_lg')
 
 # grammar is some grammar rules like r""" NP: {<PRP.*|DT|JJ|NN.*>+}"""

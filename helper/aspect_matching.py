@@ -3,11 +3,14 @@ import sys
 sys.path.insert(0, "/Users/leon/Income/python files/politeness_code")
 from helper.lexicons import *
 
-def construct_sentence_vector(sentence, spacy_model):
-    return np.array([token.vector for token in spacy_model(sentence)]).mean(axis=0)
+def construct_sentence_vector(sentence, model, transformer_based = True):
+    if transformer_based:
+        return model.encode(sentence)
+    else:   
+        return np.array([token.vector for token in spacy_model(sentence)]).mean(axis=0)
 
-def construct_dim_vector(descriptive_words, spacy_model):
-    return np.array([construct_sentence_vector(sentence, spacy_model) for sentence in descriptive_words]).mean(axis=0)
+def construct_dim_vector(descriptive_words, model):
+    return np.array([construct_sentence_vector(sentence, model) for sentence in descriptive_words]).mean(axis=0)
 
 def euclidian_distance(X, Y):
     return np.sqrt(np.sum(np.power(X-Y, 2)))
@@ -21,19 +24,18 @@ def similarity_comparison(similarity_pair, threshold = 0.05):
     pass
 # if the max similarity < similarity_threshold, it means target categorys not found, then return ("no matching", input_sentence)
 # Otherwise, return the (matching class, input_sentence)
-
-def match_category(input_sentence, spacy_model, lexicon_type = "greeting",
+def match_category(input_sentence, model, lexicon_type = "greeting",
                   similarity_threshold = 0.6):
     if lexicon_type == "greeting":
         dic = greeting_lexicons
     elif lexicon_type == "ending":
         dic = ending_lexicons
-    new_vector = construct_sentence_vector(input_sentence, spacy_model)
+    new_vector = construct_sentence_vector(input_sentence, model)
     similarity_ls = []
     classes = []
     for aspect, descriptive_words in dic.items():
         classes.append(aspect)
-        cur_vector = construct_dim_vector(descriptive_words, spacy_model)
+        cur_vector = construct_dim_vector(descriptive_words, model)
         cur_similarity = cosine_sim(new_vector, cur_vector)
         similarity_ls.append(cur_similarity)
     max_similarity = max(similarity_ls)
@@ -44,10 +46,10 @@ def match_category(input_sentence, spacy_model, lexicon_type = "greeting",
 
 
 
-def batch_match_category(sentence_ls, spacy_model, lexicon_type = "greeting"):
+def batch_match_category(sentence_ls, model, lexicon_type = "greeting", similarity_threshold = 0.6):
     result_ls = []
     for sentence in sentence_ls:
-        result_ls.append(match_category(sentence, spacy_model, lexicon_type))
+        result_ls.append(match_category(sentence, model, lexicon_type, similarity_threshold))
     return result_ls
 
 # Assume match_result_ls has length > 1
@@ -71,8 +73,8 @@ def cluster_category(match_result_ls):
         
 # result_ls is the result of batch_match_category function
 # bool_group = True: group sentences with same label together
-def nlp_aspect_matching(sentence_ls, spacy_model, lexicon_type = "greeting", bool_group = True):
-    result_ls = batch_match_category(sentence_ls, spacy_model, lexicon_type) # generate label for each sentence
+def nlp_aspect_matching(sentence_ls, model, lexicon_type = "greeting", bool_group = True, similarity_threshold = 0.4):
+    result_ls = batch_match_category(sentence_ls, model, lexicon_type, similarity_threshold) # generate label for each sentence
     if not bool_group or len(result_ls) == 1: # if the user don't want to cluster same label sentences, just return the result_ls,     # Or if the result_ls only contains one sentence, just return it
         return result_ls
     else: # If there are more than 1 sentence in the list and bool_group = True
