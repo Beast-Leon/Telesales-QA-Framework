@@ -1,7 +1,7 @@
 import nltk
 import spacy
 import sys
-sys.path.insert(0, '/Users/leon/Income/python files/politeness_code')
+sys.path.insert(0, '/Users/leon/Income/python files/Telesales-QA-Framework')
 from helper.customized_pos import *
 #nlp = spacy.load('en_core_web_lg')
 

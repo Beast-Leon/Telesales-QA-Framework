@@ -1,6 +1,6 @@
 import numpy as np
 import sys
-sys.path.insert(0, "/Users/leon/Income/python files/politeness_code")
+sys.path.insert(0, "/Users/leon/Income/python files/Telesales-QA-Framework")
 from helper.lexicons import *
 
 def construct_sentence_vector(sentence, model, transformer_based = True):

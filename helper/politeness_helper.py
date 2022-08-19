@@ -3,7 +3,7 @@ import spacy
 #nlp = spacy.load('en_core_web_lg')
 import pickle
 import sys
-sys.path.insert(0, "/Users/leon/Income/python files/politeness_code")
+sys.path.insert(0, "/Users/leon/Income/python files/Telesales-QA-Framework")
 
 from politeness.scripts.format_input import *
 from politeness.scripts.train_model import *
