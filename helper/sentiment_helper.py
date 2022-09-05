@@ -15,20 +15,33 @@ def batch_tokenizer(sentence_ls, tokenizer, sentiment_model):
 # generate label
 def generate_label(softmax_ls):
     label_ls = []
-    label = ['negative', 'neutral', 'positive']
+    label = ['impolite', 'neutral', 'polite']
     for i, prob in enumerate(softmax_ls):
         index = np.argmax(prob)
         label_ls.append(label[index])
     return label_ls
 
+# # Combine the result of the aspect matching result with the sentiment label
+# def nlp_sentiment(aspect_ls, tokenizer, sentiment_model):
+#     sentence_ls = list(map(lambda x: x[1], aspect_ls)) # extract sentence from aspect_ls
+#     softmax_ls = batch_tokenizer(sentence_ls, tokenizer, sentiment_model)
+#     label_ls = generate_label(softmax_ls)
+#     assert len(aspect_ls) == len(label_ls)
+#     result_ls = []
+#     for aspect, label in zip(aspect_ls, label_ls):
+#         cur_result = aspect + [label]
+#         result_ls.append(cur_result)
+#     return result_ls
+
 # Combine the result of the aspect matching result with the sentiment label
-def nlp_sentiment(aspect_ls, tokenizer, sentiment_model):
-    sentence_ls = list(map(lambda x: x[1], aspect_ls))
+# seperate sentence, label from aspect_ls
+def nlp_sentiment(sentence_ls, label_ls, tokenizer, sentiment_model):
     softmax_ls = batch_tokenizer(sentence_ls, tokenizer, sentiment_model)
-    label_ls = generate_label(softmax_ls)
-    assert len(aspect_ls) == len(label_ls)
+    sentiment_ls = generate_label(softmax_ls)
+    assert len(sentence_ls) == len(sentiment_ls)
+    assert len(label_ls) == len(sentiment_ls)
     result_ls = []
-    for aspect, label in zip(aspect_ls, label_ls):
-        cur_result = aspect + [label]
+    for i in range(len(sentence_ls)):
+        cur_result = [sentence_ls[i], label_ls[i], sentiment_ls[i]]
         result_ls.append(cur_result)
     return result_ls

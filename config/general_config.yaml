@@ -1,0 +1,9 @@
+similarity_threshold:
+- opening:
+    standard_greeting: 0.27602134676029283
+    purpose_of_call: 0.2815880780418714
+    ask_for_permission: 0.42921302503063563
+- closing:
+    follow_up: 0.4106628816678292
+    data_enrichment: 0.3254513197711536
+    standard_closing: 0.290414386930374
